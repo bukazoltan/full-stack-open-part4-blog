@@ -31,20 +31,6 @@ app.use(middleware.requestLogger);
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
-
-  if (error.name === "CastError" && error.kind === "ObjectId") {
-    return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
-  } else if (error.name === "JsonWebTokenError") {
-    return response.status(401).json({ error: "invalid token" });
-  }
-
-  next(error);
-};
-
-app.use(errorHandler);
+app.use(middleware.errorHandler);
 
 module.exports = app;
